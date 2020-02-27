@@ -1,0 +1,25 @@
+.cell {
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+
+.grid {
+    /* width: 300px; */
+    display: grid;
+    /* grid-gap: 5px; */
+    grid-template-columns: repeat(40, 24px);
+    /* border: 1px solid #ccc; */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.alive {
+    background-color: orange;
+}
+
+body {
+    display: flex;
+}

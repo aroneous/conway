@@ -3,7 +3,14 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div id="grid" class="grid"></div>
+        <div id="applayout">
+            <div id="controls">
+                <button id="startStopButton">Stop</button>
+                <input disabled id="speedDisplay">
+                <input type="range" min="0" max="10000" value="500" id="speedSlider">
+            </div>
+            <div id="grid" class="grid"></div>
+        </div>
         <script src="conway.js"></script>
     </body>
 </html>

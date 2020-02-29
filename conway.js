@@ -22,6 +22,7 @@ function initGrid() {
     for (var idx = 0; idx < NUM_CELLS; idx++) {
         const cell = document.createElement("div");
         cell.classList.add("cell");
+        cell.draggable = false;
         grid.appendChild(cell);
     }
 }
@@ -31,6 +32,16 @@ function createRandomModel() {
     for (var idx = 0; idx < NUM_CELLS; idx++) {
         const alive = Math.random() > 0.7;
         model.push(alive);
+    }
+
+    return model;
+}
+
+function randomizeModel(model) {
+    for (var idx = 0; idx < NUM_CELLS; idx++) {
+        if (!model[idx]) {
+            model[idx] = Math.random() > 0.7;
+        }
     }
 
     return model;
@@ -108,20 +119,33 @@ function innerDimensions(node) {
     var timer = null;
     
     let b = document.getElementById("startStopButton");
+    let rb = document.getElementById("randomizeButton");
     let sp = document.getElementById("speedSlider");
     let sd = document.getElementById("speedDisplay");
+    let grid = document.getElementById("grid");
+
     let speed = sp.value;
+
+    var selecting = false;
+    var setting = false;
 
     b.addEventListener("click", function(event) {
         if (timer == null) {
             let speed = sp.value;
             timer = window.setInterval(doGeneration, speed);
             b.innerText = "Stop";
+            grid.classList.remove("stopped");
         } else {
             window.clearInterval(timer);
             timer = null;
             b.innerText = "Start";
+            grid.classList.add("stopped");
         }
+    });
+
+    rb.addEventListener("click", function(event) {
+        randomizeModel(model);
+        renderModel(model);
     });
 
     sd.value = sp.value + " ms";
@@ -140,11 +164,43 @@ function innerDimensions(node) {
 
     let cells = document.getElementsByClassName("cell");
     for (let i=0, cell; cell = cells[i]; i++) {
-        cell.addEventListener('click', function(event) {
+        // cell.setAttribute("data-index", i);
+        cell.addEventListener('mousedown', function(event) {
             model[i] = !model[i];
             renderModel(model);
         });
+        cell.addEventListener("mouseover", function() {
+            if (selecting) {
+                model[i] = setting;
+                renderModel(model);
+            }
+        });
     }
+
+    grid.addEventListener('mousedown', function(event) {
+        console.log('mousedown');
+        selecting = true;
+        setting = event.button === 0; // Set on left mouse click
+        // if (event.target.hasAttribute("data-index")) {
+        //     console.log("Has data-index: " + event.target.getAttribute("data-index"));
+        //     setting = model[event.target.getAttribute("data-index")];
+        // } else {
+        //     setting = true;
+        // }
+        event.preventDefault();
+    });
+
+    grid.addEventListener('mouseup', function(event) {
+        selecting = false;
+    });
+
+    grid.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+    });
+
+    grid.addEventListener('dragstart', function(event) {
+        event.preventDefault();
+    })
 
     function doGeneration() {
         model = iterateModel(model);

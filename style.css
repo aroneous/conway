@@ -36,6 +36,10 @@
     grid-template-columns: repeat(40, 24px);
 }
 
+.grid.stopped {
+    background-color: #f4f4f4;
+}
+
 .alive {
     background-color: orange;
 }
